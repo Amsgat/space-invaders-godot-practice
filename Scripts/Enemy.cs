@@ -3,6 +3,11 @@ using System;
 
 public partial class Enemy : Area2D
 {
+	private float _horizontalSpeed = 50.0f;
+	private float _verticalSpeed = 1.0f;
+	private static int _direction = 1;
+	private int _enemyId;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -12,7 +17,16 @@ public partial class Enemy : Area2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		
+		Position += new Vector2(_horizontalSpeed * _direction, _verticalSpeed) * (float)delta;
+		if(Position.X <= GetViewport().GetVisibleRect().Size.X / 4 || Position.X > GetViewport().GetVisibleRect().Size.X * 3 / 4)
+		{
+			ChangeDirection();
+		}
+	}
+
+	public static void ChangeDirection()
+	{
+		_direction *= -1;
 	}
 
 	public void Shoot()
@@ -23,5 +37,15 @@ public partial class Enemy : Area2D
 	public void _on_area_entered(Area2D area)
 	{
 		
+	}
+
+	public void SetId(int id)
+	{
+		_enemyId = id;
+	}
+
+	public int GetId()
+	{
+		return _enemyId;
 	}
 }

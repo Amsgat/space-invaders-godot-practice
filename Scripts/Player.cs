@@ -5,6 +5,7 @@ public partial class Player : CharacterBody2D
 {
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -400.0f;
+	private int _numberOfLives = 3;
 
 	// private PackedScene _bulletSpawner = GD.Load<PackedScene>("res://Scenes/bullet.tscn");
 
@@ -28,4 +29,13 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
+	public void SetLives(int lives)
+	{
+		_numberOfLives = lives;
+	}
+
+	public int GetLives()
+	{
+		return _numberOfLives;
+	}
 }
