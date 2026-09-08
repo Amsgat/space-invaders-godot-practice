@@ -9,6 +9,7 @@ public partial class LevelManager : Node
 	private PackedScene _playerSpawner = GD.Load<PackedScene>("res://Scenes/player.tscn");
 	private Player _player;
 	private PackedScene _bulletSpawner = GD.Load<PackedScene>("res://Scenes/bullet.tscn");
+	private PackedScene _wallSpawner = GD.Load<PackedScene>("res://Scenes/wall.tscn");
 	private Vector2 _viewportSize;
 
 	private Label _scoreTextLabel = new();
@@ -17,11 +18,7 @@ public partial class LevelManager : Node
 	private Label _playerLivesLeft = new();
 
 	private Random _random = new();
-
 	private int _score;
-
-	int i = 0;
-	int enemiesAlive = 50;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -38,6 +35,13 @@ public partial class LevelManager : Node
 		_scoreLabel.Text = $"{_score:D4}";
 		AddChild(_scoreTextLabel);
 		AddChild(_scoreLabel);
+
+		StaticBody2D wall1 = _wallSpawner.Instantiate<StaticBody2D>();
+		StaticBody2D wall2 = _wallSpawner.Instantiate<StaticBody2D>();
+		AddChild(wall1);
+		AddChild(wall2);
+		wall1.Position = new Vector2(_viewportSize.X/4 - 20,0);
+		wall2.Position = new Vector2(_viewportSize.X * 3 / 4 + 20, 0);
 
 		_playerLivesLeftText.Position = new Vector2(10,100);
 		_playerLivesLeftText.Text = $"<LIVES>";
@@ -59,7 +63,7 @@ public partial class LevelManager : Node
 			Shoot(-1);
 		}
 
-		if(_random.NextDouble() < (0.01 + (0.25/enemiesAlive)))
+		if(_random.NextDouble() < (0.01 + (0.25/Enemy.GetNumberOfEnemies())))
 		{
 			EnemyShoot();
 		}
@@ -126,8 +130,7 @@ public partial class LevelManager : Node
     {
 		_score++;
 		_scoreLabel.Text = $"{_score:D4}";
-		//_enemyList.Remove(enemy);
 		RemoveChild(enemy);
-		enemiesAlive--;
+		Enemy.RemoveEnemy();
     }
 }
